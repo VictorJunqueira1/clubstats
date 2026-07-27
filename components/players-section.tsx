@@ -81,11 +81,10 @@ export function PlayersSection({ members }: { members: Member[] }) {
             <button
               key={s.key}
               onClick={() => setSort(s.key)}
-              className={`rounded-full px-3 py-1 text-sm transition-colors ${
-                sort === s.key
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-secondary-foreground hover:bg-muted"
-              }`}
+              className={`rounded-full px-3 py-1 text-sm transition-colors ${sort === s.key
+                ? "bg-primary text-primary-foreground"
+                : "bg-secondary text-secondary-foreground hover:bg-muted"
+                }`}
             >
               {s.label}
             </button>
@@ -119,17 +118,25 @@ function GaRanking({
   )
   const max = Math.max(1, ...ranked.map(gaTotal))
 
-  const medal = (i: number) => {
-    if (i === 0) return "var(--color-accent)"
-    if (i === 1) return "oklch(0.75 0.02 150)"
-    if (i === 2) return "oklch(0.6 0.09 40)"
-    return "var(--color-muted-foreground)"
+  const medal = (index: number) => {
+    if (index === 0) return { background: "#FFD700", color: "#000" }
+    if (index === 1) return { background: "#C0C0C0", color: "#000" }
+    if (index === 2) return { background: "#CD7F32", color: "#000" }
+
+    return { background: "#000", color: "#fff" }
   }
+
+  //   const medal = (i: number) => {
+  //   if (i === 0) return "#FFD700"
+  //   if (i === 1) return "#C0C0C0"
+  //   if (i === 2) return "#C0C0C0"
+  //   return "#000"
+  // }
 
   return (
     <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="mb-4 flex items-center gap-2">
-        <Zap className="size-5 text-accent" aria-hidden="true" />
+        <Zap className="size-5 text-[#FFD700]" aria-hidden="true" />
         <h2 className="text-lg font-semibold text-card-foreground">Ranking G/A</h2>
         <span className="text-sm text-muted-foreground">· Participações em gol (Gols + Assistências)</span>
       </div>
@@ -145,7 +152,7 @@ function GaRanking({
               >
                 <span
                   className="flex size-7 shrink-0 items-center justify-center rounded-full font-mono text-sm font-bold"
-                  style={{ background: medal(i), color: "var(--color-primary-foreground)" }}
+                  style={medal(i)}
                 >
                   {i + 1}
                 </span>
@@ -153,7 +160,7 @@ function GaRanking({
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="truncate font-semibold text-card-foreground">{m.proName}</span>
                     <span className="shrink-0 font-mono text-sm">
-                      <span className="font-bold text-accent">{total}</span>
+                      <span className="font-bold text-gray-200">{total}</span>
                       <span className="text-muted-foreground"> G/A</span>
                     </span>
                   </div>
@@ -190,8 +197,7 @@ function PlayerCard({ member, onSelect }: { member: Member; onSelect: () => void
     >
       <div className="flex items-center gap-3">
         <div
-          className="flex size-14 shrink-0 flex-col items-center justify-center rounded-xl font-mono leading-none"
-          style={{ background: overallColor(ovr), color: "var(--color-primary-foreground)" }}
+          className="flex size-14 shrink-0 flex-col items-center justify-center rounded-xl font-mono leading-none bg-white text-black"
         >
           <span className="text-2xl font-bold">{ovr}</span>
           <span className="text-[10px] font-medium opacity-80">{positionLabel(member.proPos)}</span>
@@ -200,17 +206,17 @@ function PlayerCard({ member, onSelect }: { member: Member; onSelect: () => void
           <div className="truncate font-semibold text-card-foreground">{member.proName}</div>
           <div className="truncate text-sm text-muted-foreground">{member.name}</div>
           <div className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground">
-            <Star className="size-3 fill-accent text-accent" aria-hidden="true" />
+            <Star className="size-3 fill-accent text-yellow-400" aria-hidden="true" />
             {member.ratingAve} · {groupLabel(member.favoritePosition)}
           </div>
         </div>
       </div>
 
       <div className="mt-4 flex items-center justify-between rounded-lg bg-accent/10 px-3 py-2">
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-accent">
-          <Zap className="size-3.5" aria-hidden="true" /> Participações (G/A)
+        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-300">
+          <Zap className="size-3.5 text-yellow-400" aria-hidden="true" /> Participações (G/A)
         </span>
-        <span className="font-mono text-sm font-bold text-accent">{gaTotal(member)}</span>
+        <span className="font-mono text-sm font-bold text-gray-200">{gaTotal(member)}</span>
       </div>
 
       <div className="mt-3 grid grid-cols-3 gap-2 text-center">
@@ -349,12 +355,12 @@ function PlayerDetail({ member }: { member: Member }) {
       <div className="mt-2 grid grid-cols-2 gap-2 text-center sm:grid-cols-4">
         <BigStat value={member.goals} label="Gols" />
         <BigStat value={member.assists} label="Assistências" />
-        <BigStat value={String(ga)} label="G/A" accent />
+        <BigStat value={String(ga)} label="G/A" />
         <BigStat value={member.gamesPlayed} label="Jogos" />
       </div>
 
       <div className="mt-2 rounded-xl bg-accent/10 px-4 py-2.5 text-center text-sm">
-        <span className="font-mono font-bold text-accent">{gaPerGame(member).toFixed(2)}</span>
+        <span className="font-mono font-bold text-gray-200">{gaPerGame(member).toFixed(2)}</span>
         <span className="text-muted-foreground"> participações em gol por jogo</span>
       </div>
 
@@ -396,7 +402,7 @@ function PlayerDetail({ member }: { member: Member }) {
       {/* Todos os dados da API */}
       <div className="mt-6">
         <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Todos os dados (resposta da API)
+          Todos os dados
         </div>
         <div className="overflow-hidden rounded-xl border border-border">
           <table className="w-full text-sm">

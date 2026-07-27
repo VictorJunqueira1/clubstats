@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 import type { ClubStats } from "@/lib/ea"
 import { StatCard } from "@/components/stat-card"
+import Image from "next/image"
 
 function eaColorToHex(n: string): string {
   const v = Number(n)
@@ -36,22 +37,16 @@ export function ClubOverview({ club }: { club: ClubStats }) {
   const kit2 = eaColorToHex(club.clubInfo.customKit.kitColor2)
 
   const segments = [
-    { label: "Vitórias", value: wins, color: "var(--color-chart-1)" },
+    { label: "Vitórias", value: wins, color: "#22c55e" },
     { label: "Empates", value: ties, color: "var(--color-muted-foreground)" },
-    { label: "Derrotas", value: losses, color: "var(--color-destructive)" },
+    { label: "Derrotas", value: losses, color: "#ef4444" },
   ]
 
   return (
     <div className="space-y-6">
       {/* Cabeçalho do clube */}
       <div className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 sm:flex-row sm:items-center">
-        <div
-          className="flex size-16 shrink-0 items-center justify-center rounded-full border-4 font-mono text-xl font-bold"
-          style={{ borderColor: kit2, background: kit1, color: kit2 }}
-          aria-hidden="true"
-        >
-          PS
-        </div>
+        <Image src={"/logo-club.png"} alt={"Logo Club"} width={64} height={64} className="rounded-md" />
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl font-bold capitalize text-card-foreground text-balance">{club.clubName}</h2>
           <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
@@ -64,7 +59,7 @@ export function ClubOverview({ club }: { club: ClubStats }) {
           </div>
         </div>
         <div className="flex gap-3">
-          <div className="rounded-xl bg-primary px-5 py-3 text-center text-primary-foreground">
+          <div className="rounded-xl bg-accent-foreground px-5 py-3 text-center text-primary-foreground">
             <div className="font-mono text-3xl font-bold leading-none">{club.currentDivision}ª</div>
             <div className="mt-1 text-xs font-medium">Divisão atual</div>
           </div>
@@ -100,19 +95,22 @@ export function ClubOverview({ club }: { club: ClubStats }) {
 
       {/* Grade de stats */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard icon={Gamepad2} label="Partidas" value={club.gamesPlayed} />
-        <StatCard icon={Award} label="Pontos" value={club.points} />
-        <StatCard icon={Goal} label="Gols marcados" value={goals} hint={`${gpg} por jogo`} />
-        <StatCard icon={Target} label="Gols sofridos" value={against} />
+        <StatCard icon={Gamepad2} iconClassName="text-blue-500" label="Partidas" value={club.gamesPlayed} />
+        <StatCard icon={Award} iconClassName="text-yellow-500" label="Pontos" value={club.points} />
+        <StatCard icon={Goal} iconClassName="text-green-500" label="Gols marcados" value={goals} hint={`${gpg} por jogo`} />
+        <StatCard icon={Target} iconClassName="text-red-500" label="Gols sofridos" value={against} />
+
         <StatCard
           icon={TrendingUp}
+          iconClassName={diff >= 0 ? "text-emerald-500" : "text-red-500"}
           label="Saldo de gols"
           value={diff > 0 ? `+${diff}` : diff}
           className={diff >= 0 ? "" : "border-destructive/40"}
         />
-        <StatCard icon={ShieldCheck} label="Clean sheets" value={club.cleanSheets} />
-        <StatCard icon={TrendingUp} label="Promoções" value={club.promotions} />
-        <StatCard icon={TrendingDown} label="Rebaixamentos" value={club.relegations} />
+
+        <StatCard icon={ShieldCheck} iconClassName="text-cyan-500" label="Clean sheets" value={club.cleanSheets} />
+        <StatCard icon={TrendingUp} iconClassName="text-purple-500" label="Promoções" value={club.promotions} />
+        <StatCard icon={TrendingDown} iconClassName="text-orange-500" label="Rebaixamentos" value={club.relegations} />
       </div>
     </div>
   )

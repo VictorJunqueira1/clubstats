@@ -9,7 +9,6 @@ const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono'
 export const metadata: Metadata = {
   title: 'Preto Shifu — Pro Clubs Stats',
   description: 'Estatísticas do clube e dos jogadores no EA FC Pro Clubs',
-  generator: 'v0.app',
   icons: {
     icon: [
       {

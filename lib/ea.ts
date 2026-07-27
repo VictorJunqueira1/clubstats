@@ -1,5 +1,4 @@
 // Camada de integração com a API oficial do EA FC Pro Clubs.
-// Nenhum dado local é usado como fallback: respostas inválidas geram erro.
 
 export const CLUB_ID = "8782476"
 export const PLATFORM = "common-gen5"

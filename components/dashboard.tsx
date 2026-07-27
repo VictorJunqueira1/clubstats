@@ -156,13 +156,13 @@ export function Dashboard() {
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary">
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-medium text-green-500">
           <Wifi
             className="size-3.5"
             aria-hidden="true"
           />
 
-          Dados da API da EA
+          <p className="text-primary">API Online</p>
         </div>
 
         <div className="flex items-center gap-3">
