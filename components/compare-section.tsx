@@ -1,28 +1,35 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { GitCompareArrows, Trophy, ChevronDown } from "lucide-react"
 import type { Member } from "@/lib/ea"
 import { positionLabel, groupLabel, nationalityLabel, gaTotal, gaPerGame } from "@/lib/ea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { GitCompareArrows, Trophy } from "lucide-react"
 
 // Cada métrica sabe extrair seu valor e se "maior é melhor".
 type Metric = {
   label: string
   get: (m: Member) => number
   higherBetter: boolean
-  format: (v: number) => string
-  suffix?: string
+  format: (value: number) => string
+  deltaDecimals?: number
 }
 
 const METRICS: Metric[] = [
   { label: "Overall", get: (m) => Number(m.proOverall), higherBetter: true, format: (v) => String(v) },
-  { label: "Nota média", get: (m) => Number(m.ratingAve), higherBetter: true, format: (v) => v.toFixed(1) },
+  { label: "Nota média", get: (m) => Number(m.ratingAve), higherBetter: true, format: (v) => v.toFixed(1), deltaDecimals: 1 },
   { label: "Jogos", get: (m) => Number(m.gamesPlayed), higherBetter: true, format: (v) => String(v) },
   { label: "Vitórias", get: (m) => Number(m.winRate), higherBetter: true, format: (v) => `${v}%` },
   { label: "Gols", get: (m) => Number(m.goals), higherBetter: true, format: (v) => String(v) },
   { label: "Assistências", get: (m) => Number(m.assists), higherBetter: true, format: (v) => String(v) },
   { label: "G/A (participações)", get: (m) => gaTotal(m), higherBetter: true, format: (v) => String(v) },
-  { label: "G/A por jogo", get: (m) => gaPerGame(m), higherBetter: true, format: (v) => v.toFixed(2) },
+  { label: "G/A por jogo", get: (m) => gaPerGame(m), higherBetter: true, format: (v) => v.toFixed(2), deltaDecimals: 2 },
   { label: "Finalização", get: (m) => Number(m.shotSuccessRate), higherBetter: true, format: (v) => `${v}%` },
   { label: "Passes realizados", get: (m) => Number(m.passesMade), higherBetter: true, format: (v) => String(v) },
   { label: "Acerto de passe", get: (m) => Number(m.passSuccessRate), higherBetter: true, format: (v) => `${v}%` },
@@ -32,9 +39,14 @@ const METRICS: Metric[] = [
   { label: "Cartões vermelhos", get: (m) => Number(m.redCards), higherBetter: false, format: (v) => String(v) },
 ]
 
+function formatMetricDelta(metric: Metric, leftValue: number, rightValue: number): string {
+  const difference = Math.abs(leftValue - rightValue)
+  return `+${difference.toFixed(metric.deltaDecimals ?? 0)}`
+}
+
 function overallColor(ovr: number): string {
-  if (ovr >= 89) return "var(--color-accent)"
-  if (ovr >= 85) return "var(--color-primary)"
+  if (ovr >= 89) return "var(--color-white)"
+  if (ovr >= 85) return "var(--color-white)"
   return "var(--color-muted-foreground)"
 }
 
@@ -99,35 +111,46 @@ export function CompareSection({ members }: { members: Member[] }) {
         </p>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-border">
-          {METRICS.map((metric, i) => {
-            const lv = metric.get(left)
-            const rv = metric.get(right)
-            const tie = lv === rv
-            const leftWins = !tie && (metric.higherBetter ? lv > rv : lv < rv)
+          {METRICS.map((metric, index) => {
+            const leftValue = metric.get(left)
+            const rightValue = metric.get(right)
+            const tie = leftValue === rightValue
+            const leftWins = !tie && (metric.higherBetter ? leftValue > rightValue : leftValue < rightValue)
             const rightWins = !tie && !leftWins
+            const delta = formatMetricDelta(metric, leftValue, rightValue)
+
             return (
               <div
                 key={metric.label}
-                className={`grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-2.5 sm:px-4 ${
-                  i % 2 === 0 ? "bg-card" : "bg-secondary/30"
-                }`}
-              >
-                <div
-                  className={`text-right font-mono text-sm tabular-nums sm:text-base ${
-                    leftWins ? "font-bold text-primary" : "text-card-foreground"
+                className={`grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-3 sm:px-4 ${index % 2 === 0 ? "bg-card" : "bg-secondary/30"
                   }`}
-                >
-                  {metric.format(lv)}
+              >
+                <div className="flex items-baseline justify-end gap-1.5 font-mono text-sm tabular-nums sm:text-base">
+                  {leftWins ? (
+                    <span className="text-xs font-semibold text-emerald-500 sm:text-sm">
+                      {delta}
+                    </span>
+                  ) : null}
+
+                  <span className="font-semibold text-card-foreground">
+                    {metric.format(leftValue)}
+                  </span>
                 </div>
+
                 <div className="min-w-24 text-center text-[11px] font-medium uppercase tracking-wide text-muted-foreground sm:min-w-32 sm:text-xs">
                   {metric.label}
                 </div>
-                <div
-                  className={`text-left font-mono text-sm tabular-nums sm:text-base ${
-                    rightWins ? "font-bold text-primary" : "text-card-foreground"
-                  }`}
-                >
-                  {metric.format(rv)}
+
+                <div className="flex items-baseline justify-start gap-1.5 font-mono text-sm tabular-nums sm:text-base">
+                  <span className="font-semibold text-card-foreground">
+                    {metric.format(rightValue)}
+                  </span>
+
+                  {rightWins ? (
+                    <span className="text-xs font-semibold text-emerald-500 sm:text-sm">
+                      {delta}
+                    </span>
+                  ) : null}
                 </div>
               </div>
             )
@@ -160,52 +183,64 @@ function PlayerPicker({
   winner: boolean
 }) {
   const ovr = Number(member.proOverall)
+
   return (
     <div
-      className={`flex flex-col items-center gap-3 rounded-2xl border bg-card p-4 text-center transition-colors ${
-        winner ? "border-primary" : "border-border"
-      }`}
+      className="flex flex-col items-center gap-3 rounded-2xl bg-card p-4 text-center transition-colors"
     >
-      <div className="relative w-full">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+      <Select value={value} onValueChange={(newValue) => {
+        if (newValue !== null) onChange(newValue)
+      }}>
+        <SelectTrigger
           aria-label="Selecionar jogador"
-          className="w-full appearance-none rounded-lg border border-border bg-secondary px-3 py-2 pr-8 text-sm font-medium text-secondary-foreground outline-none focus:border-primary"
+          className="w-full border-border bg-secondary text-sm font-medium text-secondary-foreground focus:ring-primary"
         >
+          <SelectValue placeholder="Selecione um jogador" />
+        </SelectTrigger>
+
+        <SelectContent>
           {members.map((m) => (
-            <option key={m.name} value={m.name}>
+            <SelectItem key={m.name} value={m.name}>
               {m.proName} ({m.name})
-            </option>
+            </SelectItem>
           ))}
-        </select>
-        <ChevronDown
-          className="pointer-events-none absolute right-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden="true"
-        />
-      </div>
+        </SelectContent>
+      </Select>
 
       <div
         className="flex size-16 flex-col items-center justify-center rounded-xl font-mono leading-none"
-        style={{ background: overallColor(ovr), color: "var(--color-primary-foreground)" }}
+        style={{
+          background: overallColor(ovr),
+          color: "var(--color-primary-foreground)",
+        }}
       >
         <span className="text-3xl font-bold">{ovr}</span>
-        <span className="text-[10px] font-medium opacity-80">{positionLabel(member.proPos)}</span>
+        <span className="text-[10px] font-medium opacity-80">
+          {positionLabel(member.proPos)}
+        </span>
       </div>
 
       <div className="min-w-0">
-        <div className="truncate font-semibold text-card-foreground">{member.proName}</div>
+        <div className="truncate font-semibold text-card-foreground">
+          {member.proName}
+        </div>
+
         <div className="truncate text-xs text-muted-foreground">
-          {groupLabel(member.favoritePosition)} · {nationalityLabel(member.proNationality)}
+          {groupLabel(member.favoritePosition)} ·{" "}
+          {nationalityLabel(member.proNationality)}
         </div>
       </div>
 
       <div
-        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-          winner ? "bg-primary/15 text-primary" : "bg-secondary text-muted-foreground"
-        }`}
+        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${winner
+          ? "bg-primary/15 text-primary"
+          : "bg-secondary text-muted-foreground"
+          }`}
       >
-        {winner ? <Trophy className="size-3.5" aria-hidden="true" /> : null}
+        {winner ? (
+          <Trophy className="size-3.5" aria-hidden="true" />
+        ) : null}
+
         {score} {score === 1 ? "categoria" : "categorias"}
       </div>
     </div>
