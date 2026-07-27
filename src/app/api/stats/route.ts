@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getStats } from "@/lib/ea"
+import { getStats } from "@/src/lib/ea"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0

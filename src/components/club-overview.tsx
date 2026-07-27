@@ -9,8 +9,8 @@ import {
   Award,
   MapPin,
 } from "lucide-react"
-import type { ClubStats } from "@/lib/ea"
-import { StatCard } from "@/components/stat-card"
+import type { ClubStats } from "@/src/lib/ea"
+import { StatCard } from "@/src/components/stat-card"
 import Image from "next/image"
 
 function eaColorToHex(n: string): string {

@@ -10,16 +10,16 @@ import {
   Users,
   Wifi,
 } from "lucide-react"
-import { ClubOverview } from "@/components/club-overview"
-import { CompareSection } from "@/components/compare-section"
-import { PlayersSection } from "@/components/players-section"
+import { ClubOverview } from "@/src/components/club-overview"
+import { CompareSection } from "@/src/components/compare-section"
+import { PlayersSection } from "@/src/components/players-section"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs"
-import type { StatsPayload } from "@/lib/ea"
+} from "@/src/components/ui/tabs"
+import type { StatsPayload } from "@/src/lib/ea"
 
 type ApiErrorResponse = {
   message?: string

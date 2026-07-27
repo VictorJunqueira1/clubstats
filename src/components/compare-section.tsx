@@ -1,15 +1,15 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import type { Member } from "@/lib/ea"
-import { positionLabel, groupLabel, nationalityLabel, gaTotal, gaPerGame } from "@/lib/ea"
+import type { Member } from "@/src/lib/ea"
+import { positionLabel, groupLabel, nationalityLabel, gaTotal, gaPerGame } from "@/src/lib/ea"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/src/components/ui/select"
 import { GitCompareArrows, Trophy } from "lucide-react"
 
 // Cada métrica sabe extrair seu valor e se "maior é melhor".

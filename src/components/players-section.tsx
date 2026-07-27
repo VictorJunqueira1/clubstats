@@ -18,7 +18,7 @@ import {
   Square,
   Target,
 } from "lucide-react"
-import type { Member } from "@/lib/ea"
+import type { Member } from "@/src/lib/ea"
 import {
   positionLabel,
   groupLabel,
@@ -27,14 +27,14 @@ import {
   gaTotal,
   gaPerGame,
   MEMBER_FIELD_LABELS,
-} from "@/lib/ea"
+} from "@/src/lib/ea"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog"
+} from "@/src/components/ui/dialog"
 
 type SortKey = "proOverall" | "ga" | "goals" | "assists" | "ratingAve" | "gamesPlayed" | "winRate"
 

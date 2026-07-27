@@ -1,10 +1,10 @@
 import { Activity } from "lucide-react"
-import { Dashboard } from "@/components/dashboard"
+import { Dashboard } from "@/src/components/dashboard"
 import {
   CLUB_ID,
   CLUB_NAME,
   PLATFORM,
-} from "@/lib/ea"
+} from "@/src/lib/ea"
 
 export default function Page() {
   return (
