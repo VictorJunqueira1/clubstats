@@ -4,43 +4,15 @@ import {
   useMemo,
   useState,
 } from "react"
-import {
-  ArrowUpDown,
-  Crosshair,
-  Flag,
-  Gamepad2,
-  Goal,
-  Handshake,
-  Medal,
-  Percent,
-  Ruler,
-  ShieldCheck,
-  Square,
-  Star,
-  Target,
-  Trophy,
-  Zap,
-} from "lucide-react"
+import { ArrowUpDown, Crosshair, Flag, Gamepad2, Goal, Handshake, Medal, Percent, Ruler, ShieldCheck, Square, Star, Target, Trophy, Zap } from "lucide-react"
 import type {
   MemberResponse as Member,
   RecentPlayerStatsResponse,
 } from "@/src/types/responses/ea"
-import {
-  gaPerGame,
-  gaTotal,
-  groupLabel,
-  MEMBER_FIELD_LABELS,
-  nationalityLabel,
-  positionLabel,
-} from "@/src/lib/ea"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/src/components/ui/dialog"
+import { gaPerGame, gaTotal, groupLabel, MEMBER_FIELD_LABELS, nationalityLabel, positionLabel } from "@/src/lib/ea"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/src/components/ui/dialog"
 import { PlayerRecentDetails } from "@/src/components/player-recent-details"
+import { RecentPlayersTable } from "@/src/components/recent-players-table"
 
 type SortKey =
   | "proOverall"
@@ -147,8 +119,35 @@ export function PlayersSection({
     }) ?? null
     : null
 
+  function handleRecentPlayerSelect(
+    player: RecentPlayerStatsResponse,
+  ): void {
+    const playerName = normalizePlayerName(
+      player.playerName,
+    )
+
+    const member = members.find(
+      (item) =>
+        playerName ===
+        normalizePlayerName(item.name) ||
+        playerName ===
+        normalizePlayerName(item.proName),
+    )
+
+    if (member) {
+      setSelected(member)
+    }
+  }
+
   return (
     <div className="space-y-8">
+      <RecentPlayersTable
+        players={recentPlayers}
+        onSelectPlayer={
+          handleRecentPlayerSelect
+        }
+      />
+
       <GaRanking
         members={members}
         onSelect={setSelected}

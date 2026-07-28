@@ -58,6 +58,8 @@ export type RecentPlayerStatsResponse = {
     passAttempts: number
     passAccuracy: number
     shotEfficiency: number
+    minutesPlayed: number
+    goalContributionsPer90: number
     ratingConsistency: number
     matches: RecentPlayerMatchResponse[]
 }

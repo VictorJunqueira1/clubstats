@@ -151,7 +151,7 @@ export function CompareSection({ members }: { members: Member[] }) {
 
             return (
               <div key={group.title} className="overflow-hidden rounded-xl border border-border/60 bg-background/70">
-                <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:px-4">
+                <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-200 sm:px-4">
                   <GroupIcon className="size-3.5" aria-hidden="true" />
                   <span>{group.title}</span>
                 </div>

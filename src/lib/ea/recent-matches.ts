@@ -164,9 +164,12 @@ type MutableRecentPlayer = Omit<
     | "averageRating"
     | "passAccuracy"
     | "shotEfficiency"
+    | "minutesPlayed"
+    | "goalContributionsPer90"
     | "ratingConsistency"
 > & {
     ratings: number[]
+    secondsPlayed: number
 }
 
 function buildPlayerStats(
@@ -231,11 +234,9 @@ function buildPlayerStats(
                 passAttempts: 0,
                 matches: [],
                 ratings: [],
+                secondsPlayed: 0,
             }
-
-            current.playerName =
-                player.playername || current.playerName
-
+            current.playerName = player.playername || current.playerName
             current.gamesPlayed += 1
             current.goals += goals
             current.assists += assists
@@ -244,6 +245,7 @@ function buildPlayerStats(
             current.shots += shots
             current.passesMade += passesMade
             current.passAttempts += passAttempts
+            current.secondsPlayed += secondsPlayed
             current.matches.push(playerMatch)
             current.ratings.push(rating)
 
@@ -261,10 +263,7 @@ function buildPlayerStats(
             goalContributions: player.goalContributions,
             averageRating:
                 player.ratings.length > 0
-                    ? player.ratings.reduce(
-                        (sum, rating) => sum + rating,
-                        0,
-                    ) / player.ratings.length
+                    ? player.ratings.reduce((sum, rating) => sum + rating, 0, ) / player.ratings.length
                     : 0,
             manOfTheMatch: player.manOfTheMatch,
             shots: player.shots,
@@ -278,11 +277,13 @@ function buildPlayerStats(
                 player.shots > 0
                     ? (player.goals / player.shots) * 100
                     : 0,
-            ratingConsistency: standardDeviation(player.ratings),
-            matches: player.matches.sort(
-                (left, right) =>
-                    right.playedAt.localeCompare(left.playedAt),
-            ),
+            minutesPlayed: player.secondsPlayed / 60,
+            goalContributionsPer90:
+                player.secondsPlayed > 0
+                    ? (player.goalContributions * 5400) / player.secondsPlayed
+                    : 0,
+            ratingConsistency: standardDeviation(player.ratings ),
+            matches: player.matches.sort((left, right) => right.playedAt.localeCompare(left.playedAt)),
         }))
         .sort(
             (left, right) =>

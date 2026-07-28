@@ -60,7 +60,7 @@ export function HighlightsSection({ highlights, }: { highlights: HighlightRespon
 
                                 <span className="rounded-xl bg-primary/10 p-2 text-primary">
                                     <Icon
-                                        className="size-5"
+                                        className="size-5 text-blue-400"
                                         aria-hidden="true"
                                     />
                                 </span>
