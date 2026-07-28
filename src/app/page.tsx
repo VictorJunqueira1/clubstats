@@ -4,7 +4,7 @@ import {
   CLUB_ID,
   CLUB_NAME,
   PLATFORM,
-} from "@/src/lib/ea"
+} from "@/src/services/ea"
 
 export default function Page() {
   return (
