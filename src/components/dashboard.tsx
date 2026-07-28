@@ -187,8 +187,8 @@ export function Dashboard() {
           >
             <RefreshCw
               className={`size-3.5 ${isValidating
-                  ? "animate-spin"
-                  : ""
+                ? "animate-spin"
+                : ""
                 }`}
               aria-hidden="true"
             />
@@ -265,6 +265,7 @@ export function Dashboard() {
           <ClubOverview
             club={club}
             recent={recent.club}
+            recentPlayers={recent.players}
           />
         </TabsContent>
 

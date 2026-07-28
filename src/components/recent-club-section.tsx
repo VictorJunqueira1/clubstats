@@ -1,33 +1,50 @@
+"use client"
+
+import { useState } from "react"
 import {
     CircleEqual,
     CircleMinus,
     CirclePlus,
+    Eye,
     Gamepad2,
     Goal,
     Percent,
     ShieldAlert,
     Trophy,
 } from "lucide-react"
+import { RecentMatchDetailsDialog } from "@/src/components/recent-match-details-dialog"
 import { StatCard } from "@/src/components/stat-card"
 import type {
     RecentClubStatsResponse,
     RecentMatchResult,
+    RecentMatchSummaryResponse,
+    RecentPlayerStatsResponse,
 } from "@/src/types/responses/ea"
 
-const RESULT_LABELS: Record<RecentMatchResult, string> = {
+const RESULT_LABELS: Record<
+    RecentMatchResult,
+    string
+> = {
     win: "Vitória",
     draw: "Empate",
     loss: "Derrota",
 }
 
-const RESULT_CLASSES: Record<RecentMatchResult, string> = {
+const RESULT_CLASSES: Record<
+    RecentMatchResult,
+    string
+> = {
     win: "border-emerald-500/30 bg-emerald-500/10 text-emerald-500",
     draw: "border-border bg-secondary text-muted-foreground",
     loss: "border-red-500/30 bg-red-500/10 text-red-500",
 }
 
-function formatPercentage(value: number): string {
-    return `${value.toFixed(1).replace(".", ",")}%`
+function formatPercentage(
+    value: number,
+): string {
+    return `${value
+        .toFixed(1)
+        .replace(".", ",")}%`
 }
 
 function formatDate(value: string): string {
@@ -40,7 +57,23 @@ function formatDate(value: string): string {
     }).format(new Date(value))
 }
 
-export function RecentClubSection({ clubName, stats, }: { clubName: string; stats: RecentClubStatsResponse }) {
+export function RecentClubSection({
+    clubName,
+    stats,
+    players,
+}: {
+    clubName: string
+    stats: RecentClubStatsResponse
+    players: RecentPlayerStatsResponse[]
+}) {
+    const [
+        selectedMatch,
+        setSelectedMatch,
+    ] =
+        useState<RecentMatchSummaryResponse | null>(
+            null,
+        )
+
     return (
         <section className="space-y-5">
             <div>
@@ -49,8 +82,7 @@ export function RecentClubSection({ clubName, stats, }: { clubName: string; stat
                 </h2>
 
                 <p className="mt-1 text-sm text-muted-foreground">
-                    Recorte recente calculado exclusivamente a partir do
-                    histórico de partidas da EA.
+                    Recorte recente calculado exclusivamente a partir do histórico de partidas da EA.
                 </p>
             </div>
 
@@ -120,8 +152,11 @@ export function RecentClubSection({ clubName, stats, }: { clubName: string; stat
                     icon={Percent}
                     iconClassName="text-primary"
                     label="Aproveitamento"
-                    value={formatPercentage(stats.pointsPercentage)}
-                    hint={`${stats.points} de ${stats.gamesPlayed * 3} pontos`}
+                    value={formatPercentage(
+                        stats.pointsPercentage,
+                    )}
+                    hint={`${stats.points} de ${stats.gamesPlayed * 3
+                        } pontos`}
                 />
             </div>
 
@@ -139,55 +174,86 @@ export function RecentClubSection({ clubName, stats, }: { clubName: string; stat
                 ) : (
                     <ol className="divide-y divide-border">
                         {stats.matches.map((match) => (
-                            <li
-                                key={match.matchId}
-                                className="grid gap-3 px-4 py-4 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:px-5"
-                            >
-                                <span
-                                    className={`w-fit rounded-full border px-2.5 py-1 text-xs font-semibold ${RESULT_CLASSES[match.result]
-                                        }`}
+                            <li key={match.matchId}>
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setSelectedMatch(match)
+                                    }
+                                    className="grid w-full gap-3 px-4 py-4 text-left transition-colors hover:bg-secondary/30 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:px-5"
                                 >
-                                    {RESULT_LABELS[match.result]}
-                                </span>
+                                    <span
+                                        className={`w-fit rounded-full border px-2.5 py-1 text-xs font-semibold ${RESULT_CLASSES[match.result]}`}
+                                    >
+                                        {
+                                            RESULT_LABELS[
+                                            match.result
+                                            ]
+                                        }
+                                    </span>
 
-                                <div className="min-w-0">
-                                    <div className="flex flex-wrap items-baseline gap-2">
-                                        <span className="font-semibold capitalize text-card-foreground">
-                                            {clubName}
-                                        </span>
-
-                                        <span className="font-mono text-lg font-bold tabular-nums text-card-foreground">
-                                            {match.goalsFor} × {match.goalsAgainst}
-                                        </span>
-
-                                        <span className="truncate text-sm text-muted-foreground">
-                                            {match.opponentName}
-                                        </span>
-                                    </div>
-
-                                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                                        <time dateTime={match.playedAt}>
-                                            {formatDate(match.playedAt)}
-                                        </time>
-
-                                        {match.decidedByDnf ? (
-                                            <span>
-                                                {match.wonByDnf
-                                                    ? "Vitória por desistência"
-                                                    : "Partida encerrada por desistência"}
+                                    <div className="min-w-0">
+                                        <div className="flex flex-wrap items-baseline gap-2">
+                                            <span className="font-semibold capitalize text-card-foreground">
+                                                {clubName}
                                             </span>
-                                        ) : null}
-                                    </div>
-                                </div>
 
-                                <span className="font-mono text-xs text-muted-foreground">
-                                    #{match.matchId}
-                                </span>
+                                            <span className="font-mono text-lg font-bold tabular-nums text-card-foreground">
+                                                {match.goalsFor} ×{" "}
+                                                {match.goalsAgainst}
+                                            </span>
+
+                                            <span className="truncate text-sm text-muted-foreground">
+                                                {
+                                                    match.opponentName
+                                                }
+                                            </span>
+                                        </div>
+
+                                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                                            <time
+                                                dateTime={
+                                                    match.playedAt
+                                                }
+                                            >
+                                                {formatDate(
+                                                    match.playedAt,
+                                                )}
+                                            </time>
+
+                                            {match.decidedByDnf ? (
+                                                <span>
+                                                    {match.wonByDnf
+                                                        ? "Vitória por desistência"
+                                                        : "Partida encerrada por desistência"}
+                                                </span>
+                                            ) : null}
+                                        </div>
+                                    </div>
+
+                                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary">
+                                        <Eye
+                                            className="size-4"
+                                            aria-hidden="true"
+                                        />
+
+                                        Ver detalhes
+                                    </span>
+                                </button>
                             </li>
                         ))}
                     </ol>
                 )}
             </div>
+
+            <RecentMatchDetailsDialog
+                clubName={clubName}
+                match={selectedMatch}
+                players={players}
+                onClose={() =>
+                    setSelectedMatch(null)
+                }
+            />
         </section>
     )
 }

@@ -11,6 +11,7 @@ import {
 import type {
   ClubStatsResponse as ClubStats,
   RecentClubStatsResponse,
+  RecentPlayerStatsResponse,
 } from "@/src/types/responses/ea"
 import { StatCard } from "@/src/components/stat-card"
 import Image from "next/image"
@@ -19,9 +20,11 @@ import { RecentClubSection } from "@/src/components/recent-club-section"
 export function ClubOverview({
   club,
   recent,
+  recentPlayers,
 }: {
   club: ClubStats
   recent: RecentClubStatsResponse
+  recentPlayers: RecentPlayerStatsResponse[]
 }) {
   const wins = Number(club.wins)
   const losses = Number(club.losses)
@@ -237,6 +240,7 @@ export function ClubOverview({
       <RecentClubSection
         clubName={club.clubName}
         stats={recent}
+        players={recentPlayers}
       />
     </div>
   )

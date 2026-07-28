@@ -13,6 +13,7 @@ import { gaPerGame, gaTotal, groupLabel, MEMBER_FIELD_LABELS, nationalityLabel, 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/src/components/ui/dialog"
 import { PlayerRecentDetails } from "@/src/components/player-recent-details"
 import { RecentPlayersTable } from "@/src/components/recent-players-table"
+import { RecentPlayerCharts } from "@/src/components/recent-player-charts"
 
 type SortKey =
   | "proOverall"
@@ -143,10 +144,10 @@ export function PlayersSection({
     <div className="space-y-8">
       <RecentPlayersTable
         players={recentPlayers}
-        onSelectPlayer={
-          handleRecentPlayerSelect
-        }
+        onSelectPlayer={handleRecentPlayerSelect}
       />
+
+      <RecentPlayerCharts players={recentPlayers} />
 
       <GaRanking
         members={members}
