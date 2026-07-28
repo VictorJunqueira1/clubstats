@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select"
-import {BadgeCheck,Crosshair,GitCompareArrows,Shield,SportShoe,Target, Trophy,} from "lucide-react"
+import { BadgeCheck, GitCompareArrows, Shield, SportShoe, Target, Trophy, } from "lucide-react"
 
 // Cada métrica sabe extrair seu valor e se "maior é melhor".
 type Metric = {
@@ -36,6 +36,8 @@ const METRIC_GROUPS: MetricGroup[] = [
       { label: "Nota média", get: (m) => Number(m.ratingAve), higherBetter: true, format: (v) => v.toFixed(1), deltaDecimals: 1 },
       { label: "Jogos", get: (m) => Number(m.gamesPlayed), higherBetter: true, format: (v) => String(v) },
       { label: "Vitórias", get: (m) => Number(m.winRate), higherBetter: true, format: (v) => `${v}%` },
+      { label: "Melhor em campo", get: (m) => Number(m.manOfTheMatch), higherBetter: true, format: (v) => String(v) },
+      { label: "Cartões vermelhos", get: (m) => Number(m.redCards), higherBetter: false, format: (v) => String(v) }
     ],
   },
   {
@@ -64,15 +66,7 @@ const METRIC_GROUPS: MetricGroup[] = [
       { label: "Desarmes", get: (m) => Number(m.tacklesMade), higherBetter: true, format: (v) => String(v) },
       { label: "Acerto de desarme", get: (m) => Number(m.tackleSuccessRate), higherBetter: true, format: (v) => `${v}%` },
     ],
-  },
-  {
-    title: "Misc",
-    icon: Crosshair,
-    metrics: [
-      { label: "Melhor em campo", get: (m) => Number(m.manOfTheMatch), higherBetter: true, format: (v) => String(v) },
-      { label: "Cartões vermelhos", get: (m) => Number(m.redCards), higherBetter: false, format: (v) => String(v) },
-    ],
-  },
+  }
 ]
 
 function formatMetricDelta(metric: Metric, leftValue: number, rightValue: number): string {
@@ -157,7 +151,7 @@ export function CompareSection({ members }: { members: Member[] }) {
 
             return (
               <div key={group.title} className="overflow-hidden rounded-xl border border-border/60 bg-background/70">
-                <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:px-4">
+                <div className="flex items-center gap-2 border-b border-border/50 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-200 sm:px-4">
                   <GroupIcon className="size-3.5" aria-hidden="true" />
                   <span>{group.title}</span>
                 </div>

@@ -7,11 +7,13 @@ import {
   LoaderCircle,
   RefreshCw,
   Shield,
+  Sparkles,
   Users,
   Wifi,
 } from "lucide-react"
 import { ClubOverview } from "@/src/components/club-overview"
 import { CompareSection } from "@/src/components/compare-section"
+import { HighlightsSection } from "@/src/components/highlights-section"
 import { PlayersSection } from "@/src/components/players-section"
 import {
   Tabs,
@@ -19,13 +21,17 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/src/components/ui/tabs"
-import type { StatsResponse as StatsPayload } from "@/src/types/responses/ea"
+import type {
+  StatsResponse as StatsPayload,
+} from "@/src/types/responses/ea"
 
 type ApiErrorResponse = {
   message?: string
 }
 
-async function fetcher(url: string): Promise<StatsPayload> {
+async function fetcher(
+  url: string,
+): Promise<StatsPayload> {
   const response = await fetch(url, {
     method: "GET",
     cache: "no-store",
@@ -49,7 +55,9 @@ function timeAgo(iso: string): string {
   const seconds = Math.max(
     0,
     Math.floor(
-      (Date.now() - new Date(iso).getTime()) / 1000,
+      (Date.now() -
+        new Date(iso).getTime()) /
+      1000,
     ),
   )
 
@@ -60,9 +68,7 @@ function timeAgo(iso: string): string {
 
   if (minutes < 60) return `há ${minutes}min`
 
-  const hours = Math.floor(minutes / 60)
-
-  return `há ${hours}h`
+  return `há ${Math.floor(minutes / 60)}h`
 }
 
 export function Dashboard() {
@@ -136,12 +142,13 @@ export function Dashboard() {
   const {
     club,
     members,
+    recent,
     fetchedAt,
   } = data
 
   return (
     <div className="space-y-5">
-      {error && (
+      {error ? (
         <div className="flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           <AlertTriangle
             className="mt-0.5 size-4 shrink-0"
@@ -149,11 +156,11 @@ export function Dashboard() {
           />
 
           <span>
-            A última atualização falhou. Os dados exibidos são da
-            última resposta válida recebida da API.
+            A última atualização falhou. Os dados exibidos são
+            da última resposta válida recebida da API.
           </span>
         </div>
-      )}
+      ) : null}
 
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-medium text-green-500">
@@ -162,7 +169,9 @@ export function Dashboard() {
             aria-hidden="true"
           />
 
-          <p className="text-primary">API Online</p>
+          <p className="text-primary">
+            API Online
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -178,8 +187,8 @@ export function Dashboard() {
           >
             <RefreshCw
               className={`size-3.5 ${isValidating
-                  ? "animate-spin"
-                  : ""
+                ? "animate-spin"
+                : ""
                 }`}
               aria-hidden="true"
             />
@@ -195,7 +204,7 @@ export function Dashboard() {
         defaultValue="clube"
         className="w-full gap-6"
       >
-        <TabsList className="h-auto w-full max-w-xl bg-secondary p-1">
+        <TabsList className="h-auto w-full max-w-3xl bg-secondary p-1">
           <TabsTrigger
             value="clube"
             className="flex-1 gap-2 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -225,6 +234,18 @@ export function Dashboard() {
           </TabsTrigger>
 
           <TabsTrigger
+            value="destaques"
+            className="flex-1 gap-2 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+          >
+            <Sparkles
+              className="size-4"
+              aria-hidden="true"
+            />
+
+            Destaques
+          </TabsTrigger>
+
+          <TabsTrigger
             value="comparar"
             className="flex-1 gap-2 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
           >
@@ -241,14 +262,30 @@ export function Dashboard() {
           value="clube"
           className="mt-0"
         >
-          <ClubOverview club={club} />
+          <ClubOverview
+            club={club}
+            recent={recent.club}
+            recentPlayers={recent.players}
+          />
         </TabsContent>
 
         <TabsContent
           value="jogadores"
           className="mt-0"
         >
-          <PlayersSection members={members} />
+          <PlayersSection
+            members={members}
+            recentPlayers={recent.players}
+          />
+        </TabsContent>
+
+        <TabsContent
+          value="destaques"
+          className="mt-0"
+        >
+          <HighlightsSection
+            highlights={recent.highlights}
+          />
         </TabsContent>
 
         <TabsContent
