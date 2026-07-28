@@ -9,7 +9,7 @@ import {
   Award,
   MapPin,
 } from "lucide-react"
-import type { ClubStats } from "@/src/lib/ea"
+import type { ClubStatsResponse as ClubStats } from "@/src/types/responses/ea"
 import { StatCard } from "@/src/components/stat-card"
 import Image from "next/image"
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getStats } from "@/src/lib/ea"
+import { getStats } from "@/src/services/ea"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"

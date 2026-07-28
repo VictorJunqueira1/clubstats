@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState, type ComponentType } from "react"
-import type { Member } from "@/src/lib/ea"
+import type { MemberResponse as Member } from "@/src/types/responses/ea"
 import { positionLabel, groupLabel, nationalityLabel, gaTotal, gaPerGame } from "@/src/lib/ea"
 import {
   Select,
@@ -10,15 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select"
-import {
-  BadgeCheck,
-  Crosshair,
-  GitCompareArrows,
-  Shield,
-  SportShoe,
-  Target,
-  Trophy,
-} from "lucide-react"
+import {BadgeCheck,Crosshair,GitCompareArrows,Shield,SportShoe,Target, Trophy,} from "lucide-react"
 
 // Cada métrica sabe extrair seu valor e se "maior é melhor".
 type Metric = {
@@ -47,7 +39,7 @@ const METRIC_GROUPS: MetricGroup[] = [
     ],
   },
   {
-    title: "Ofensiva",
+    title: "Ataque",
     icon: Target,
     metrics: [
       { label: "Gols", get: (m) => Number(m.goals), higherBetter: true, format: (v) => String(v) },

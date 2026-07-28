@@ -19,7 +19,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/src/components/ui/tabs"
-import type { StatsPayload } from "@/src/lib/ea"
+import type { StatsResponse as StatsPayload } from "@/src/types/responses/ea"
 
 type ApiErrorResponse = {
   message?: string

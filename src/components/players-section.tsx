@@ -18,7 +18,7 @@ import {
   Square,
   Target,
 } from "lucide-react"
-import type { Member } from "@/src/lib/ea"
+import type { MemberResponse as Member } from "@/src/types/responses/ea"
 import {
   positionLabel,
   groupLabel,
